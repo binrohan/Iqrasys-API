@@ -11,6 +11,10 @@ namespace iqrasys.api.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<DemoRequest> DemoRequests { get; set; }
+        public DbSet<Solution> Solutions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

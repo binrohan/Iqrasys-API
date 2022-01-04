@@ -1,13 +1,16 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace iqrasys.api.Models
 {
-    public class Contact
+    public class DemoRequest
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Message { get; set; }
+        public Solution Solution { get; set; }
+        public Guid SolutionId { get; set; }
+
     }
 }
