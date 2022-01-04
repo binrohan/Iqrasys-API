@@ -8,9 +8,6 @@ namespace iqrasys.api.Models
     public class User : IdentityUser
     {
         public DateTime Joined { get; set; }
-        public string Phone { get; set; }
-        // public ICollection<UserRole> UserRoles { get; set; }
-
     }
 
 }

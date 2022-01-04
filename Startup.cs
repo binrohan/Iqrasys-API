@@ -77,6 +77,7 @@ namespace iqrasys.api
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers();
+            services.AddScoped<IIqraRepository, IqraRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

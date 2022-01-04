@@ -12,7 +12,7 @@ namespace iqrasys.api.Dtos
         public string Password { get; set; }
         [Required]
         public DateTime Joined { get; set; }
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
 
         public UserForRegisterDto()
         {

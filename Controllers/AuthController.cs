@@ -44,11 +44,11 @@ namespace iqrasys.api.Controllers
 
             if (result.Succeeded)
             {
+                var appUser = _mapper.Map<UserForReturnDto>(user);
+
                 Response.Headers.Add("X-Authorization-Token", GenerateJwtToken(user).Result);
-                return Ok(new
-                {
-                    user = user
-                });
+
+                return Ok(appUser);
             }
             return Unauthorized();
         }

@@ -10,6 +10,7 @@ namespace iqrasys.api.Helpers
         public MappingProfiles()
         {
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<User, UserForReturnDto>();
         }
     }
 
