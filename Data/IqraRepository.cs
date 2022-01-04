@@ -15,7 +15,28 @@ namespace iqrasys.api.Data
             _context = context;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public void Add<T>(T entity) where T : class
+        {
+            _context.Add(entity);
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            _context.Remove(entity);
+        }
+        public async Task<bool> SaveAll()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => String.Equals(u.Id, userId));
+
+            return user;
+        }
+
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             try
             {
@@ -28,7 +49,6 @@ namespace iqrasys.api.Data
 
                 throw ex;
             }
-
         }
     }
 }

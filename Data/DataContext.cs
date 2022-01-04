@@ -14,6 +14,7 @@ namespace iqrasys.api.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<DemoRequest> DemoRequests { get; set; }
         public DbSet<Solution> Solutions { get; set; }
+        public DbSet<ArchiveUser> ArchiveUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
