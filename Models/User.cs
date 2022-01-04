@@ -11,7 +11,7 @@ namespace iqrasys.api.Models
         public string Phone { get; set; }
         public bool IsActive { get; set; }
 
-        public ICollection<UserRole> UserRoles { get; set; }
+        // public ICollection<UserRole> UserRoles { get; set; }
 
     }
 

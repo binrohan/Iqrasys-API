@@ -32,7 +32,7 @@ namespace iqrasys.api
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultSqlServerConnection")));
 
-                       
+            
 
             services.AddControllers();
         }
