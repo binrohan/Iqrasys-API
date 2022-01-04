@@ -1,4 +1,6 @@
 using AutoMapper;
+using iqrasys.api.Dtos;
+using iqrasys.api.Models;
 
 namespace iqrasys.api.Helpers
 {
@@ -7,7 +9,7 @@ namespace iqrasys.api.Helpers
     {
         public MappingProfiles()
         {
-            
+            CreateMap<UserForRegisterDto, User>();
         }
     }
 

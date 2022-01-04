@@ -9,8 +9,6 @@ namespace iqrasys.api.Models
     {
         public DateTime Joined { get; set; }
         public string Phone { get; set; }
-        public bool IsActive { get; set; }
-
         // public ICollection<UserRole> UserRoles { get; set; }
 
     }

@@ -27,7 +27,7 @@ namespace iqrasys.api
                     var context = services.GetRequiredService<DataContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     context.Database.Migrate();
-                    // DataContextSeed.SeedData(userManager, context);
+                    DataContextSeed.SeedData(userManager, context);
 
                 }
                 catch (Exception ex)

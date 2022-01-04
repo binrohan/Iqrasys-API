@@ -28,18 +28,8 @@ namespace iqrasys.api.Data
                 userManager.CreateAsync(metaUser, "password").Wait();
 
                 var result = userManager.CreateAsync(metaUser, "password").Result;
-            }
 
-            if (!context.Solutions.Any())
-            {
-                var solutionsData = System.IO.File.ReadAllText("Data/Solutions.json");
-                var solutions = JsonConvert.DeserializeObject<List<Solution>>(solutionsData);
-
-
-                foreach (var solution in solutions)
-                {
-                    context.Solutions.Add(solution);
-                }
+                context.SaveChanges();
             }
         }
     }
