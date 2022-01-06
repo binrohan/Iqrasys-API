@@ -38,13 +38,13 @@ namespace iqrasys.api.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Postrequest(Request request)
+        public async Task<IActionResult> PostRequest(Request request)
         {
             if(string.IsNullOrEmpty(request.Name)) return BadRequest("Name is required");
 
             if(string.IsNullOrEmpty(request.Phone)) return BadRequest("Phone number is required");
 
-            if(request.Text.Length == 0) return BadRequest("Request text is required");
+            if(string.IsNullOrEmpty(request.Text)) return BadRequest("Request text is required");
 
             _repo.Add(request);
 

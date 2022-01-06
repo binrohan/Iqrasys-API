@@ -25,5 +25,10 @@ namespace iqrasys.api.Data
         Task<IReadOnlyList<Request>> GetRequestsAsync(bool isTrashed = false);
         Task<Request> GetRequestAsync(Guid id);
         #endregion Request
+    
+        #region Application
+        Task<IReadOnlyList<Application>> GetApplicationsAsync(bool isTrashed = false);
+        Task<Application> GetApplicationAsync(Guid id);
+        #endregion Applicaiton
     }
 }

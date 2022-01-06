@@ -45,7 +45,7 @@ namespace iqrasys.api.Controllers
 
             if(string.IsNullOrEmpty(message.Phone)) return BadRequest("Phone number required");
 
-            if(message.Text.Length == 0) return BadRequest("Message text required");
+            if(string.IsNullOrEmpty(message.Text)) return BadRequest("Message text required");
 
             _repo.Add(message);
 

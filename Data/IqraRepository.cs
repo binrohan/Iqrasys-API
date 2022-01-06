@@ -97,14 +97,35 @@ namespace iqrasys.api.Data
         public async Task<IReadOnlyList<Request>> GetRequestsAsync(bool isTrashed = false)
         {
             return await _context.Requests
-                                .Where(m => m.IsTrashed == isTrashed)
-                                .OrderByDescending(u => u.RequestDate)
+                                .Where(r => r.IsTrashed == isTrashed)
+                                .OrderByDescending(r => r.RequestDate)
                                 .ToListAsync();
         }
         public async Task<Request> GetRequestAsync(Guid id)
         {
-            return await _context.Requests.FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Requests
+                                .Include(r => r.Solution)
+                                .FirstOrDefaultAsync(r => r.Id == id);
         }
         #endregion Request
+    
+        #region Application
+        public async Task<IReadOnlyList<Application>> GetApplicationsAsync(bool isTrashed = false)
+        {
+            var applications = await _context.Applications
+                                        .Where(a => a.IsTrashed == isTrashed)
+                                        .ToListAsync();
+
+            return applications;
+        }
+
+        public async Task<Application> GetApplicationAsync(Guid id)
+        {
+            var application = await _context.Applications
+                                            .Where(a => a.Id == id)
+                                            .FirstOrDefaultAsync();
+            return application;
+        }
+        #endregion Application
     }
 }
