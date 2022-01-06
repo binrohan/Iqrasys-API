@@ -127,5 +127,33 @@ namespace iqrasys.api.Data
             return application;
         }
         #endregion Application
+
+        #region Quick Request
+        public async Task<IReadOnlyList<QuickRequest>> GetQuickRequestsAsync(bool isTrashed = false)
+        {
+            var applications = await _context.QuickRequests
+                                        .Where(a => a.IsTrashed == isTrashed)
+                                        .ToListAsync();
+
+            return applications;
+        }
+
+        public async Task<QuickRequest> GetQuickRequestAsync(Guid id)
+        {
+            var request = await _context.QuickRequests
+                                            .Where(q => q.Id == id)
+                                            .OrderBy(q => q.RequestDate)
+                                            .FirstOrDefaultAsync();
+            return request;
+        }
+
+        public async Task<QuickRequest> GetQuickRequestByPhoneAsync(string phone)
+        {
+            var request = await _context.QuickRequests
+                                            .Where(q => q.Phone == phone)
+                                            .FirstOrDefaultAsync();
+            return request;
+        }
+        #endregion Application
     }
 }

@@ -31,9 +31,9 @@ namespace iqrasys.api.Controllers
         {
             var message = await _repo.GetMessageAsync(id);
 
-            if(message == null)
+            if (message == null)
                 return NotFound("Message not found.");
-            
+
             return Ok(message);
         }
 
@@ -41,16 +41,21 @@ namespace iqrasys.api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> PostMessage(Message message)
         {
-            if(string.IsNullOrEmpty(message.Name)) return BadRequest("Phone number required");
+            if (string.IsNullOrEmpty(message.Name)) return BadRequest("Phone number required");
 
-            if(string.IsNullOrEmpty(message.Phone)) return BadRequest("Phone number required");
+            if (string.IsNullOrEmpty(message.Phone)) return BadRequest("Phone number required");
 
-            if(string.IsNullOrEmpty(message.Text)) return BadRequest("Message text required");
+            if (string.IsNullOrEmpty(message.Text)) return BadRequest("Message text required");
+
+            // Smtp.QuickSend("binrohan97@gmail.com",
+            //                "binrohan.cs@gmail.com",
+            //                "Is it working?",
+            //                "Please say yes or no.");
 
             _repo.Add(message);
 
-            if(await _repo.SaveAll())
-                return CreatedAtAction(nameof(GetMessage), new {id = message.Id}, message);
+            if (await _repo.SaveAll())
+                return CreatedAtAction(nameof(GetMessage), new { id = message.Id }, message);
 
             throw new Exception("Message send failed!");
         }
@@ -60,13 +65,13 @@ namespace iqrasys.api.Controllers
         {
             var message = await _repo.GetMessageAsync(id);
 
-            if(message == null) return NotFound("Message not found");
+            if (message == null) return NotFound("Message not found");
 
-            if(message.IsTrashed) return BadRequest("Message already removed");
+            if (message.IsTrashed) return BadRequest("Message already removed");
 
             message.IsTrashed = true;
 
-            if(await _repo.SaveAll()) return NoContent();
+            if (await _repo.SaveAll()) return NoContent();
 
             throw new Exception("Message remove failed!");
         }
@@ -76,13 +81,13 @@ namespace iqrasys.api.Controllers
         {
             var message = await _repo.GetMessageAsync(id);
 
-            if(message == null) return NotFound("Message not found");
+            if (message == null) return NotFound("Message not found");
 
-            if(!message.IsTrashed) return BadRequest("Message already storeded");
+            if (!message.IsTrashed) return BadRequest("Message already storeded");
 
             message.IsTrashed = false;
 
-            if(await _repo.SaveAll()) return Ok(message);
+            if (await _repo.SaveAll()) return Ok(message);
 
             throw new Exception("Message restore failed!");
         }
@@ -92,13 +97,13 @@ namespace iqrasys.api.Controllers
         {
             var message = await _repo.GetMessageAsync(id);
 
-            if(message == null) return NotFound("Message not found");
+            if (message == null) return NotFound("Message not found");
 
-            if(!message.IsTrashed) return BadRequest("Move the message to the trash first");
+            if (!message.IsTrashed) return BadRequest("Move the message to the trash first");
 
-           _repo.Delete(message);
+            _repo.Delete(message);
 
-            if(await _repo.SaveAll()) return NoContent();
+            if (await _repo.SaveAll()) return NoContent();
 
             throw new Exception("Message delete failed!");
         }

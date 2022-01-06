@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace iqrasys.api.Controllers
 {
-    [AllowAnonymous]
     public class ApplicationsController : ApiController
     {
         private readonly IIqraRepository _repo;

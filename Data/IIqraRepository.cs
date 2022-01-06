@@ -30,5 +30,11 @@ namespace iqrasys.api.Data
         Task<IReadOnlyList<Application>> GetApplicationsAsync(bool isTrashed = false);
         Task<Application> GetApplicationAsync(Guid id);
         #endregion Applicaiton
+
+        #region Quick Request
+        Task<IReadOnlyList<QuickRequest>> GetQuickRequestsAsync(bool isTrashed = false);
+        Task<QuickRequest> GetQuickRequestAsync(Guid id);
+        Task<QuickRequest> GetQuickRequestByPhoneAsync(string phone);
+        #endregion Quick Request
     }
 }
