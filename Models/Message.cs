@@ -19,12 +19,12 @@ namespace iqrasys.api.Models
         [Required]
         [MinLength(25, ErrorMessage = "Minimum 50 characters required")]
         public string Text { get; set; }
-        public DateTime PostDate { get; set; }
+        public DateTime MessageDate { get; set; }
         public bool IsTrashed { get; set; }
 
         public Message()
         {
-            PostDate = DateTime.Now;
+            MessageDate = DateTime.Now;
             IsTrashed = false;
         }
     }

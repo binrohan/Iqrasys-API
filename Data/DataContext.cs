@@ -12,7 +12,7 @@ namespace iqrasys.api.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<Message> Messages { get; set; }
-        public DbSet<DemoRequest> DemoRequests { get; set; }
+        public DbSet<Request> Requests { get; set; }
         public DbSet<Solution> Solutions { get; set; }
         public DbSet<ArchiveUser> ArchiveUsers { get; set; }
 

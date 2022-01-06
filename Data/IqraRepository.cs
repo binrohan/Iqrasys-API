@@ -16,6 +16,7 @@ namespace iqrasys.api.Data
             _context = context;
         }
 
+        #region POCO
         public void Add<T>(T entity) where T : class
         {
             _context.Add(entity);
@@ -29,7 +30,9 @@ namespace iqrasys.api.Data
         {
             return await _context.SaveChangesAsync() > 0;
         }
+        #endregion POCO
 
+        #region User
         public async Task<User> GetUserAsync(string userId)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
@@ -58,7 +61,9 @@ namespace iqrasys.api.Data
                                 .OrderByDescending(u => u.RemoveDate)
                                 .ToListAsync();
         }
+        #endregion User
 
+        #region Solution
         public async Task<IReadOnlyList<Solution>> GetSolutionsAsync(bool isTrashed = false)
         {
             return await _context.Solutions
@@ -71,12 +76,14 @@ namespace iqrasys.api.Data
         {
             return await _context.Solutions.FirstOrDefaultAsync(s => s.Id == id);
         }
+        #endregion Solution
 
+        #region Message
         public async Task<IReadOnlyList<Message>> GetMessagesAsync(bool isTrashed = false)
         {
             return await _context.Messages
                                 .Where(m => m.IsTrashed == isTrashed)
-                                .OrderByDescending(u => u.PostDate)
+                                .OrderByDescending(u => u.MessageDate)
                                 .ToListAsync();
         }
 
@@ -84,5 +91,20 @@ namespace iqrasys.api.Data
         {
             return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
         }
+        #endregion Request
+
+        #region Request
+        public async Task<IReadOnlyList<Request>> GetRequestsAsync(bool isTrashed = false)
+        {
+            return await _context.Requests
+                                .Where(m => m.IsTrashed == isTrashed)
+                                .OrderByDescending(u => u.RequestDate)
+                                .ToListAsync();
+        }
+        public async Task<Request> GetRequestAsync(Guid id)
+        {
+            return await _context.Requests.FirstOrDefaultAsync(m => m.Id == id);
+        }
+        #endregion Request
     }
 }
