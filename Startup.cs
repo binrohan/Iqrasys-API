@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using iqrasys.api.Data;
 using iqrasys.api.Models;
+using iqrasys.api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +39,7 @@ namespace iqrasys.api
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultSqlServerConnection")));
 
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
             IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
             {
@@ -78,6 +80,7 @@ namespace iqrasys.api
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers();
             services.AddScoped<IIqraRepository, IqraRepository>();
+            services.AddTransient<IMailService, Services.MailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

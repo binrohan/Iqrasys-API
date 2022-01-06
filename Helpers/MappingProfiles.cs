@@ -12,6 +12,11 @@ namespace iqrasys.api.Helpers
             CreateMap<UserForRegisterDto, User>();
             CreateMap<User, UserForReturnDto>();
             CreateMap<User, ArchiveUser>().ForMember(u => u.Id, opt => opt.Ignore());
+            CreateMap<Message, MailRequest>()
+                .ForMember(dest => dest.ToEmail, 
+                            opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Body, 
+                            opt => opt.MapFrom(src => src.Text));
         }
     }
 

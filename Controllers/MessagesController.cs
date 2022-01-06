@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using iqrasys.api.Data;
 using iqrasys.api.Models;
+using iqrasys.api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,8 +13,13 @@ namespace iqrasys.api.Controllers
     {
         private readonly IIqraRepository _repo;
         private readonly IMapper _mapper;
-        public MessagesController(IIqraRepository repo, IMapper mapper)
+        private readonly IMailService _mail;
+        public MessagesController(
+            IIqraRepository repo,
+            IMapper mapper,
+            IMailService mail)
         {
+            _mail = mail;
             _mapper = mapper;
             _repo = repo;
         }
@@ -47,10 +53,11 @@ namespace iqrasys.api.Controllers
 
             if (string.IsNullOrEmpty(message.Text)) return BadRequest("Message text required");
 
-            // Smtp.QuickSend("binrohan97@gmail.com",
-            //                "binrohan.cs@gmail.com",
-            //                "Is it working?",
-            //                "Please say yes or no.");
+            // if(!string.IsNullOrEmpty(message.Email)){
+            //     var mail = _mapper.Map<MailRequest>(message);
+
+            //     await _mail.SendEmailAsync(mail);
+            // }
 
             _repo.Add(message);
 
