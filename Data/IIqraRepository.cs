@@ -11,7 +11,14 @@ namespace iqrasys.api.Data
         void Delete<T>(T entity) where T: class;
         Task<bool> SaveAll();
 
-         Task<User> GetUserAsync(Guid userId);
+         Task<User> GetUserAsync(string userId);
          Task<IEnumerable<User>> GetUsersAsync();
+         Task<IReadOnlyList<ArchiveUser>> GetArchiveUsersAsync();
+
+         Task<IReadOnlyList<Solution>> GetSolutionsAsync(bool isTrashed = false);
+         Task<Solution> GetSolutionAsync(Guid id);
+        
+        Task<IReadOnlyList<Message>> GetMessagesAsync(bool isTrashed = false);
+        Task<Message> GetMessageAsync(Guid id);
     }
 }

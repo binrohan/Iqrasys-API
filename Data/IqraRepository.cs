@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using iqrasys.api.Dtos;
 using iqrasys.api.Models;
@@ -29,9 +30,9 @@ namespace iqrasys.api.Data
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<User> GetUserAsync(Guid userId)
+        public async Task<User> GetUserAsync(string userId)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => String.Equals(u.Id, userId));
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             return user;
         }
@@ -49,6 +50,39 @@ namespace iqrasys.api.Data
 
                 throw ex;
             }
+        }
+
+        public async Task<IReadOnlyList<ArchiveUser>> GetArchiveUsersAsync()
+        {
+            return await _context.ArchiveUsers
+                                .OrderByDescending(u => u.RemoveDate)
+                                .ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<Solution>> GetSolutionsAsync(bool isTrashed = false)
+        {
+            return await _context.Solutions
+                                .Where(s => s.IsTrashed == isTrashed)
+                                .OrderByDescending(s => s.Order)
+                                .ToListAsync();
+        }
+
+        public async Task<Solution> GetSolutionAsync(Guid id)
+        {
+            return await _context.Solutions.FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task<IReadOnlyList<Message>> GetMessagesAsync(bool isTrashed = false)
+        {
+            return await _context.Messages
+                                .Where(m => m.IsTrashed == isTrashed)
+                                .OrderByDescending(u => u.PostDate)
+                                .ToListAsync();
+        }
+
+        public async Task<Message> GetMessageAsync(Guid id)
+        {
+            return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
         }
     }
 }

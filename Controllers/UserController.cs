@@ -29,13 +29,17 @@ namespace iqrasys.api.Controllers
         }
 
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> RemoveUser(Guid userId)
-        {
+        public async Task<IActionResult> RemoveUser(string userId)
+        { 
             var user = await _repo.GetUserAsync(userId);
 
-            var userForArchive = _mapper.Map<ArchiveUser>(user);
+            if(user == null){
+                return BadRequest();
+            }
 
-            _repo.Add<ArchiveUser>(userForArchive);
+            var userForArchive = _mapper.Map<ArchiveUser>(user);
+            
+            _repo.Add(userForArchive);
 
             if (!await _repo.SaveAll())
             {
@@ -49,8 +53,18 @@ namespace iqrasys.api.Controllers
                 var userForReturn = _mapper.Map<UserForReturnDto>(user);
                 return Ok(userForReturn);
             }
+
             _repo.Delete(userForArchive);
+
             throw new Exception("User remove failed");
+        }
+    
+        [HttpGet("Archived")]
+        public async Task<IActionResult> GetArchiveUsers()
+        {
+            var users = await _repo.GetArchiveUsersAsync();
+
+            return Ok(users);
         }
     }
 }

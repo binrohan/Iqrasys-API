@@ -11,6 +11,7 @@ namespace iqrasys.api.Helpers
         {
             CreateMap<UserForRegisterDto, User>();
             CreateMap<User, UserForReturnDto>();
+            CreateMap<User, ArchiveUser>().ForMember(u => u.Id, opt => opt.Ignore());
         }
     }
 
