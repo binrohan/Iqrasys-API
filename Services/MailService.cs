@@ -1,5 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
+using iqrasys.api.Helpers;
 using iqrasys.api.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -19,7 +20,7 @@ namespace iqrasys.api.Services
         {
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+            email.To.Add(MailboxAddress.Parse(_mailSettings.Mail));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
             if (mailRequest.Attachments != null)
@@ -38,10 +39,10 @@ namespace iqrasys.api.Services
                     }
                 }
             }
-            builder.HtmlBody = mailRequest.Body;
+            builder.HtmlBody = Utils.MailBodyHTML(mailRequest);
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+            smtp.Connect(_mailSettings.Host, _mailSettings.Port);
             smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
             await smtp.SendAsync(email);
             smtp.Disconnect(true);

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using iqrasys.api.Data;
 using iqrasys.api.Models;
+using iqrasys.api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,8 +13,12 @@ namespace iqrasys.api.Controllers
     {
         private readonly IIqraRepository _repo;
         private readonly IMapper _mapper;
-        public RequestsController(IIqraRepository repo, IMapper mapper)
+        private readonly IMailService _mail;
+        public RequestsController(IIqraRepository repo,
+                                  IMapper mapper,
+                                  IMailService mail)
         {
+            _mail = mail;
             _mapper = mapper;
             _repo = repo;
         }
@@ -31,8 +36,8 @@ namespace iqrasys.api.Controllers
         {
             var request = await _repo.GetRequestAsync(id);
 
-            if(request == null) return NotFound("Request not found.");
-            
+            if (request == null) return NotFound("Request not found.");
+
             return Ok(request);
         }
 
@@ -40,16 +45,20 @@ namespace iqrasys.api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> PostRequest(Request request)
         {
-            if(string.IsNullOrEmpty(request.Name)) return BadRequest("Name is required");
+            if (string.IsNullOrEmpty(request.Name)) return BadRequest("Name is required");
 
-            if(string.IsNullOrEmpty(request.Phone)) return BadRequest("Phone number is required");
+            if (string.IsNullOrEmpty(request.Phone)) return BadRequest("Phone number is required");
 
-            if(string.IsNullOrEmpty(request.Text)) return BadRequest("Request text is required");
+            if (string.IsNullOrEmpty(request.Text)) return BadRequest("Request text is required");
+
+            var mail = _mapper.Map<MailRequest>(request);
+
+            await _mail.SendEmailAsync(mail);
 
             _repo.Add(request);
 
-            if(await _repo.SaveAll())
-                return CreatedAtAction(nameof(GetRequest), new {id = request.Id}, request);
+            if (await _repo.SaveAll())
+                return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
 
             throw new Exception("Request send failed!");
         }
@@ -59,13 +68,13 @@ namespace iqrasys.api.Controllers
         {
             var request = await _repo.GetRequestAsync(id);
 
-            if(request == null) return NotFound("Request not found");
+            if (request == null) return NotFound("Request not found");
 
-            if(request.IsTrashed) return BadRequest("Request already removed");
+            if (request.IsTrashed) return BadRequest("Request already removed");
 
             request.IsTrashed = true;
 
-            if(await _repo.SaveAll()) return NoContent();
+            if (await _repo.SaveAll()) return NoContent();
 
             throw new Exception("Request remove failed!");
         }
@@ -75,13 +84,13 @@ namespace iqrasys.api.Controllers
         {
             var request = await _repo.GetRequestAsync(id);
 
-            if(request == null) return NotFound("Request not found.");
+            if (request == null) return NotFound("Request not found.");
 
-            if(!request.IsTrashed) return BadRequest("Request already storeded.");
+            if (!request.IsTrashed) return BadRequest("Request already storeded.");
 
             request.IsTrashed = false;
 
-            if(await _repo.SaveAll()) return Ok(request);
+            if (await _repo.SaveAll()) return Ok(request);
 
             throw new Exception("Request restore failed!");
         }
@@ -91,13 +100,13 @@ namespace iqrasys.api.Controllers
         {
             var request = await _repo.GetRequestAsync(id);
 
-            if(request == null) return NotFound("Request not found");
+            if (request == null) return NotFound("Request not found");
 
-            if(!request.IsTrashed) return BadRequest("Move the request to the trash first");
+            if (!request.IsTrashed) return BadRequest("Move the request to the trash first");
 
-           _repo.Delete(request);
+            _repo.Delete(request);
 
-            if(await _repo.SaveAll()) return NoContent();
+            if (await _repo.SaveAll()) return NoContent();
 
             throw new Exception("Request delete failed!");
         }

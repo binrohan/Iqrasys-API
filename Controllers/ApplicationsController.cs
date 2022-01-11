@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using iqrasys.api.Data;
 using iqrasys.api.Dtos;
 using iqrasys.api.Models;
+using iqrasys.api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,8 +19,10 @@ namespace iqrasys.api.Controllers
     {
         private readonly IIqraRepository _repo;
         private readonly IMapper _mapper;
-        public ApplicationsController(IIqraRepository repo, IMapper mapper)
+        private readonly IMailService _mail;
+        public ApplicationsController(IIqraRepository repo, IMapper mapper, IMailService mail)
         {
+            _mail = mail;
             _mapper = mapper;
             _repo = repo;
         }
@@ -38,6 +42,19 @@ namespace iqrasys.api.Controllers
             var dbPath = Path.Combine(folderName, fileName);
 
             if (file.Length == 0) return BadRequest("File is corrupted.");
+
+            var mail = new MailRequest {
+                Name = "__Job Applicant",
+                ToEmail = "__N/A__",
+                Phone = "__N/A__",
+                Body = "__N/A__",
+                Subject = "Job Application",
+                Attachments = new List<IFormFile>{
+                    applicationForCreate.File
+                }
+            };
+            
+            await _mail.SendEmailAsync(mail);
 
             try
             {
@@ -135,7 +152,7 @@ namespace iqrasys.api.Controllers
             }
             catch (System.Exception)
             {
-                throw new Exception("Application Delete failed!");;
+                throw new Exception("Application Delete failed!"); ;
             }
 
             _repo.Delete(application);

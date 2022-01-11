@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using iqrasys.api.Data;
 using iqrasys.api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iqrasys.api.Controllers
@@ -18,6 +19,7 @@ namespace iqrasys.api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetSolutions([FromQuery] bool isTrashed = false)
         {
             var solutions = await _repo.GetSolutionsAsync(isTrashed);

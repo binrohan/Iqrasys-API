@@ -53,11 +53,11 @@ namespace iqrasys.api.Controllers
 
             if (string.IsNullOrEmpty(message.Text)) return BadRequest("Message text required");
 
-            // if(!string.IsNullOrEmpty(message.Email)){
-            //     var mail = _mapper.Map<MailRequest>(message);
 
-            //     await _mail.SendEmailAsync(mail);
-            // }
+            var mail = _mapper.Map<MailRequest>(message);
+
+            await _mail.SendEmailAsync(mail);
+
 
             _repo.Add(message);
 

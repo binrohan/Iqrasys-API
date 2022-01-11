@@ -97,6 +97,7 @@ namespace iqrasys.api.Data
         public async Task<IReadOnlyList<Request>> GetRequestsAsync(bool isTrashed = false)
         {
             return await _context.Requests
+                                .Include(r => r.Solution)
                                 .Where(r => r.IsTrashed == isTrashed)
                                 .OrderByDescending(r => r.RequestDate)
                                 .ToListAsync();
