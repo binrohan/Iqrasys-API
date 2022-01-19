@@ -44,7 +44,8 @@ namespace iqrasys.api.Data
         {
             try
             {
-                var users = await _context.Set<User>().FromSqlRaw("EXEC Get_Users").ToListAsync();
+                // var users = await _context.Set<User>().FromSqlRaw("EXEC Get_Users").ToListAsync();
+                var users = await _context.Users.ToListAsync();
 
                 return users;
             }

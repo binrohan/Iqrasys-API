@@ -52,6 +52,8 @@ namespace iqrasys.api.Controllers
             if (string.IsNullOrEmpty(message.Phone)) return BadRequest("Phone number required");
 
             if (string.IsNullOrEmpty(message.Text)) return BadRequest("Message text required");
+            
+            if (message.Text.Length < 50) return BadRequest("Minimum 50 characters required in message");
 
 
             var mail = _mapper.Map<MailRequest>(message);

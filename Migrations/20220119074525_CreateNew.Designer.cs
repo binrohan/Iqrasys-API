@@ -10,8 +10,8 @@ using iqrasys.api.Data;
 namespace iqrasys.api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220105143005_AddValidationForMessages")]
-    partial class AddValidationForMessages
+    [Migration("20220119074525_CreateNew")]
+    partial class CreateNew
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,6 +110,26 @@ namespace iqrasys.api.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("iqrasys.api.Models.Application", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AppliedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsTrashed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Applications");
+                });
+
             modelBuilder.Entity("iqrasys.api.Models.ArchiveUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -136,34 +156,6 @@ namespace iqrasys.api.Migrations
                     b.ToTable("ArchiveUsers");
                 });
 
-            modelBuilder.Entity("iqrasys.api.Models.DemoRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SolutionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolutionId");
-
-                    b.ToTable("DemoRequests");
-                });
-
             modelBuilder.Entity("iqrasys.api.Models.Message", b =>
                 {
                     b.Property<Guid>("Id")
@@ -173,21 +165,81 @@ namespace iqrasys.api.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsTrashed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("MessageDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("iqrasys.api.Models.QuickRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTrashed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuickRequests");
+                });
+
+            modelBuilder.Entity("iqrasys.api.Models.Request", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsTrashed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SolutionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolutionId");
+
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("iqrasys.api.Models.Role", b =>
@@ -366,7 +418,7 @@ namespace iqrasys.api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("iqrasys.api.Models.DemoRequest", b =>
+            modelBuilder.Entity("iqrasys.api.Models.Request", b =>
                 {
                     b.HasOne("iqrasys.api.Models.Solution", "Solution")
                         .WithMany()

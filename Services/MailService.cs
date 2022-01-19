@@ -4,6 +4,7 @@ using iqrasys.api.Helpers;
 using iqrasys.api.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -12,8 +13,10 @@ namespace iqrasys.api.Services
     public class MailService : IMailService
     {
         private readonly MailSettings _mailSettings;
-        public MailService(IOptions<MailSettings> mailSettings)
+        private readonly IConfiguration _config;
+        public MailService(IOptions<MailSettings> mailSettings, IConfiguration config)
         {
+            _config = config;
             _mailSettings = mailSettings.Value;
         }
         public async Task SendEmailAsync(MailRequest mailRequest)
@@ -43,7 +46,7 @@ namespace iqrasys.api.Services
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+            smtp.Authenticate(_mailSettings.Mail, _config["iqrasysinfo@gmail.com"]);
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
         }

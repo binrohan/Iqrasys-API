@@ -46,8 +46,8 @@ namespace iqrasys.api.Controllers
 
             var existingRequest =  await _repo.GetQuickRequestByPhoneAsync(request.Phone);
 
-            if(existingRequest != null && !existingRequest.IsSeen)
-                return BadRequest("Already requested!");
+            // if(existingRequest != null && !existingRequest.IsSeen)
+            //     return BadRequest("Already requested!");
 
             _repo.Add(request);
 

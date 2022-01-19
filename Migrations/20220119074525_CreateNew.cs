@@ -3,10 +3,40 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace iqrasys.api.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class CreateNew : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Applications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsTrashed = table.Column<bool>(nullable: false),
+                    AppliedDate = table.Column<DateTime>(nullable: false),
+                    FilePath = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Applications", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ArchiveUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    Joined = table.Column<DateTime>(nullable: false),
+                    RemoveDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArchiveUsers", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -40,13 +70,57 @@ namespace iqrasys.api.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Joined = table.Column<DateTime>(nullable: false),
-                    Phone = table.Column<string>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false)
+                    Joined = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true),
+                    MessageDate = table.Column<DateTime>(nullable: false),
+                    IsTrashed = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuickRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RequestDate = table.Column<DateTime>(nullable: false),
+                    IsTrashed = table.Column<bool>(nullable: false),
+                    Phone = table.Column<string>(nullable: true),
+                    IsSeen = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuickRequests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Solutions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Order = table.Column<int>(nullable: true),
+                    IsTrashed = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Solutions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,7 +190,9 @@ namespace iqrasys.api.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    RoleId = table.Column<string>(nullable: false),
+                    UserId1 = table.Column<string>(nullable: true),
+                    RoleId1 = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,11 +204,23 @@ namespace iqrasys.api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId1",
+                        column: x => x.RoleId1,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,6 +239,30 @@ namespace iqrasys.api.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Requests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true),
+                    SolutionId = table.Column<Guid>(nullable: false),
+                    IsTrashed = table.Column<bool>(nullable: false),
+                    RequestDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Requests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Requests_Solutions_SolutionId",
+                        column: x => x.SolutionId,
+                        principalTable: "Solutions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -183,6 +295,16 @@ namespace iqrasys.api.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId1",
+                table: "AspNetUserRoles",
+                column: "RoleId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_UserId1",
+                table: "AspNetUserRoles",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
@@ -193,10 +315,21 @@ namespace iqrasys.api.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requests_SolutionId",
+                table: "Requests",
+                column: "SolutionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Applications");
+
+            migrationBuilder.DropTable(
+                name: "ArchiveUsers");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -213,10 +346,22 @@ namespace iqrasys.api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "QuickRequests");
+
+            migrationBuilder.DropTable(
+                name: "Requests");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Solutions");
         }
     }
 }
