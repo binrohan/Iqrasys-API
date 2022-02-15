@@ -157,6 +157,7 @@ namespace iqrasys.api.Controllers
             validationParameters.ValidateIssuerSigningKey = true;
             validationParameters.ValidateAudience = true;
             validationParameters.ValidateIssuer = true;
+            validationParameters.ValidateLifetime = true;
 
             if (!tokenHandler.CanReadToken(refreshToken))
                 return Unauthorized("WHY");
